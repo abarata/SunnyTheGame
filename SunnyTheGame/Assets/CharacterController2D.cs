@@ -17,6 +17,7 @@ public class CharacterController2D : ExtendedBehavior
 	[SerializeField] private Transform m_CeilingCheck;                          // A position marking where to check for ceilings
 	[SerializeField] private Collider2D m_CrouchDisableCollider;                // A collider that will be disabled when crouching
 
+	private bool initial_AirControl;
 	const float k_GroundedRadius = .2f; // Radius of the overlap circle to determine if grounded
 	private bool m_Grounded;            // Whether or not the player is grounded.
 	const float k_CeilingRadius = .2f; // Radius of the overlap circle to determine if the player can stand up
@@ -25,8 +26,9 @@ public class CharacterController2D : ExtendedBehavior
 	private Vector3 m_Velocity = Vector3.zero;
 	public Vector3 PlayerPosition;
 
+	private bool m_PowerPunching;            // Whether or not the player is grounded.
+
 	private List<string> tagsWhereDontCrouch = new List<string>() { "Platform", "PowerJump" };
-	private List<string> tagsWhereIsNotGround = new List<string>() { "PowerJump" };
 
 	[Header("Events")]
 	[Space]
@@ -39,11 +41,9 @@ public class CharacterController2D : ExtendedBehavior
 	public BoolEvent OnCrouchEvent;
 	private bool m_wasCrouching = false;
 
-	[System.Serializable]
-	public class GameObjectEvent : UnityEvent<GameObject> {}
-	
-	public GameObjectEvent OnPrizeEvent;
-	
+	public BoolEvent OnPowerPunchEvent;
+	private bool m_wasPowerPunching = false;
+
     private string gameobjectname = "";
 
 	private void Awake()
@@ -56,9 +56,10 @@ public class CharacterController2D : ExtendedBehavior
 		if (OnCrouchEvent == null)
 			OnCrouchEvent = new BoolEvent();
 
-		if (OnPrizeEvent == null)
-			OnPrizeEvent = new GameObjectEvent();
-
+	}
+    private void Start()
+    {
+		initial_AirControl = m_AirControl;
 	}
     private void Update()
     {
@@ -80,20 +81,7 @@ public class CharacterController2D : ExtendedBehavior
 				m_Grounded = true;
 				if (!wasGrounded)
 				{
-					//Debug.Log("1- wasGrounded: " + wasGrounded.ToString()  + "  -- gameobject.name: " + colliders[i].gameObject.name + "  -- gameobject.tag: " + colliders[i].gameObject.tag);
-					Debug.Log("PlayerMovement - colliding  -- wasGrounded: " + wasGrounded.ToString() + "  -- m_Rigidbody2D.velocity.y: " + m_Rigidbody2D.velocity.y.ToString() + "  -- gameobject.name: " + colliders[i].gameObject.name + "  -- gameobject.tag: " + colliders[i].gameObject.tag);
-					if (colliders[i].gameObject.CompareTag("PRIZE"))
-                    {
-						OnPrizeEvent.Invoke(colliders[i].gameObject);
-                    }
-
-					if (!tagsWhereIsNotGround.Contains(colliders[i].gameObject.tag))
-					{
-					}
-
-					//if (m_Rigidbody2D.velocity.y <= 0)
-					//{
-					//}
+					//Debug.Log("CharacterController2D - colliding  -- wasGrounded: " + wasGrounded.ToString() + "  -- m_Rigidbody2D.velocity.y: " + m_Rigidbody2D.velocity.y.ToString() + "  -- gameobject.name: " + colliders[i].gameObject.name + "  -- gameobject.tag: " + colliders[i].gameObject.tag);
 
 					OnLandEvent.Invoke();
 
@@ -101,6 +89,7 @@ public class CharacterController2D : ExtendedBehavior
 
 			}
 		}
+		if (m_Grounded) m_PowerPunching = false;
 	}
 
 
@@ -113,10 +102,52 @@ public class CharacterController2D : ExtendedBehavior
 			var whatcolider = Physics2D.OverlapCircle(m_CeilingCheck.position, k_CeilingRadius, m_WhatIsGround);
 			if (whatcolider && !tagsWhereDontCrouch.Contains(whatcolider.tag))
 			{
-				Debug.Log("whatcolider.tag: " + whatcolider.tag);
+				//Debug.Log("whatcolider.tag: " + whatcolider.tag);
 				crouch = true;
 			}
 		}
+
+		if (!m_Grounded)
+        {
+			if (powerdownpunch)
+            {
+				// disable Air control if enabled
+				m_AirControl = false;
+				if (!m_wasPowerPunching)
+                {
+					m_wasPowerPunching = true;
+					OnPowerPunchEvent.Invoke(true);
+
+					//Debug.Log("CharController2D - agora pára por xxx,yyy segundos!");
+					// freeze the player before going down fast!
+					//m_Rigidbody2D.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation; //Freeze character X and Y axis
+					m_Rigidbody2D.constraints = RigidbodyConstraints2D.FreezePosition; //Freeze character X and Y axis
+					this.Wait(0.4f, () =>
+					{
+						m_Rigidbody2D.constraints = RigidbodyConstraints2D.FreezeRotation;
+						m_Rigidbody2D.velocity = new Vector2(0.0f, -10f);
+					});
+					// Move the character by finding the target velocity
+					Vector3 targetVelocity = new Vector2(0.0f, (-1 * (m_PunchDownForce * 40f * Time.fixedDeltaTime)));
+
+					// And then smoothing it out and applying it to the character
+					m_Rigidbody2D.velocity = Vector3.SmoothDamp(m_Rigidbody2D.velocity, targetVelocity, ref m_Velocity, m_MovementSmoothing);
+				}
+            }else
+            {
+				// set the Air cotrol to its initial state
+				m_AirControl = initial_AirControl;
+				if (m_wasPowerPunching)
+                {
+					m_wasPowerPunching = false;
+					OnPowerPunchEvent.Invoke(false);
+				}
+            }
+		}else
+        {
+			// set the Air cotrol to its initial state
+			m_AirControl = initial_AirControl;
+        }
 
 		//only control the player if grounded or airControl is turned on
 		if (m_Grounded || m_AirControl)
@@ -153,21 +184,7 @@ public class CharacterController2D : ExtendedBehavior
 
 			// Move the character by finding the target velocity
 			Vector3 targetVelocity = new Vector2(move * 10f, m_Rigidbody2D.velocity.y);
-			if (!m_Grounded && powerdownpunch)
-			{
-				// freeze the player before going down fast!
-//				var saved_velocity = m_Velocity;
-				Debug.Log("CharController2D - agora pára por 1 segundo!");
-				m_Rigidbody2D.constraints = RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation; //Freeze character Y axis
-				this.Wait(0.4f, () =>
-				{
-					m_Rigidbody2D.constraints &= ~RigidbodyConstraints2D.FreezePositionY;
-					m_Rigidbody2D.AddForce(new Vector2(0f, (-1* m_PowerJumpForce)));
-					targetVelocity = new Vector2(0.0f, (-1 * (m_PunchDownForce * 40f * Time.fixedDeltaTime)));
-					//m_Velocity = saved_velocity;
-					//m_Rigidbody2D.velocity = new Vector2(0.0f, -10f);
-				});
-			}
+
 			// And then smoothing it out and applying it to the character
 			m_Rigidbody2D.velocity = Vector3.SmoothDamp(m_Rigidbody2D.velocity, targetVelocity, ref m_Velocity, m_MovementSmoothing);
 
@@ -185,11 +202,13 @@ public class CharacterController2D : ExtendedBehavior
 			}
 		}
 		// If the player should jump...
-		if (m_Grounded && jump)
+		if ((m_Grounded && jump) || powerjump)
 		{
 			// Add a vertical force to the player.
 			m_Grounded = false;
-			m_Rigidbody2D.AddForce(new Vector2(0f, (powerjump ? m_PowerJumpForce : m_JumpForce)));
+			m_Rigidbody2D.velocity = Vector2.zero;
+			m_Rigidbody2D.AddForce(new Vector2(0f, (powerjump ? m_PowerJumpForce : m_JumpForce)), ForceMode2D.Force);
+			//Debug.Log("powerjump: " + powerjump + "  -- force: " + (powerjump ? m_PowerJumpForce : m_JumpForce).ToString());
 		}
 
 	}

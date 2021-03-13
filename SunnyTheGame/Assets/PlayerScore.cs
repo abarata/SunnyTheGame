@@ -4,25 +4,32 @@ using UnityEngine;
 
 public class PlayerScore : MonoBehaviour
 {
-    public int Score = 0;
-    private string lastCherryDestroyed = "";
+    public float MaxPlayerHealth = 100f;
 
-    public void onWinPrize(GameObject gameobject)
+    private int playerscore = 0;
+    public int Score
     {
-        //Debug.Log("2 - gameobject.name: " + gameobject.name + "  -- gameobject.tag: " + gameobject.tag);
-        var prizeojb = gameobject.GetComponent<PrizeCherry>();
-        if (lastCherryDestroyed != gameobject.name)
-        {
-            prizeojb.showPrizeAnimation();
-            UpdateScore(prizeojb.Prize);
-            lastCherryDestroyed = gameobject.name;
-        }
-
+        get { return playerscore; }
     }
 
-    public void UpdateScore (int prize)
+    private float playerhealth = 100f;
+    public float PlayerHealth
     {
-        Score += prize;
+        get { return playerhealth; }
+    }
+
+    public void UpdatePlayerHealth(float value)
+    {
+        if ((playerhealth + value) > MaxPlayerHealth) value = MaxPlayerHealth - playerhealth;
+        if ((playerhealth + value) <= 0) value = 0;
+        playerhealth += value;
+        Debug.Log("playerhealth: " + PlayerHealth.ToString());
+    }
+
+    public void UpdateScore (int value)
+    {
+        playerscore += value;
+        Debug.Log("playerscore: " + playerscore.ToString());
     }
 
 }

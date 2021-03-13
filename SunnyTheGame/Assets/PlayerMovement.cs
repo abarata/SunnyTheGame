@@ -26,18 +26,15 @@ public class PlayerMovement : MonoBehaviour {
 		{
 			jump = true;
 			animator.SetBool("isJumping", true);
-			//Debug.Log("PlayerMovement - update isJumping: " + animator.GetBool("isJumping").ToString());
 		}
 
-		if (Input.GetButtonDown("PowerDownPunch") && animator.GetBool("isJumping"))
+		if (Input.GetButtonDown("PowerDownPunch"))
 		{
 			powerdownpunch = true;
-			animator.SetBool("isPowerPunching", powerdownpunch);
 		}
-		else if (Input.GetButtonUp("PowerDownPunch") || !animator.GetBool("isJumping"))
+		else if (Input.GetButtonUp("PowerDownPunch"))
 		{
 			powerdownpunch = false;
-			animator.SetBool("isPowerPunching", false);
 		}
 
 		if (Input.GetButtonDown("Crouch"))
@@ -53,37 +50,34 @@ public class PlayerMovement : MonoBehaviour {
 
 	void FixedUpdate ()
 	{
-		//if (horizontalMove != 0f) Debug.Log("horizontalMove2: " + horizontalMove.ToString());
 		// Move our character
 		controller.Move(horizontalMove * Time.fixedDeltaTime, crouch, jump, powerdownpunch, powerjump);
 		jump = false;
 		powerjump = false;
-		powerdownpunch = false;
 	}
 
 	public void onLanding()
     {
-		Debug.Log("PlayerMovement - landing isJumping: " + animator.GetBool("isJumping").ToString());
-		animator.SetBool("isJumping", false);
+		//Debug.Log("PlayerMovement - landing isJumping: " + animator.GetBool("isJumping").ToString() + "  --- landing isPowerPunching: " + animator.GetBool("isPowerPunching").ToString() + "  -- powerjump: " + powerjump.ToString());
+		if (!powerjump) animator.SetBool("isJumping", false);
 		animator.SetBool("isPowerPunching", false);
     }
 
-	public void onUncrouching(bool isCrouching)
+	public void onCrouching(bool isCrouching)
     {
 		animator.SetBool("isCrouching", isCrouching);
+    }
+	public void onPowerPunching(bool isPowerPunching)
+    {
+		animator.SetBool("isPowerPunching", isPowerPunching);
     }
 
 	public void onPowerJump ()
     {
-		//Debug.Log("PlayerMovement - Agora devia dar o SUPER SALTO!");
-		//animator.SetBool("isJumping", false);
-		//animator.SetBool("isPowerPunching", false);
-		//powerjump = true;
-		//jump = true;
-        jump = false;
-        powerjump = false;
+		//Debug.Log("PlayerMovement - Agora vai dar o SUPER SALTO!");
+		animator.SetBool("isJumping", true);
 		powerdownpunch = false;
-		animator.SetBool("isPowerPunching", false);
-		controller.Move(0.0f, false, true, false, true);
-    }
+		powerjump = true;
+		jump = true;
+	}
 }

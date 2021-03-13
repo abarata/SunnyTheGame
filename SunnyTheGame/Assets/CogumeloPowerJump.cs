@@ -29,10 +29,11 @@ public class CogumeloPowerJump : MonoBehaviour
         {
             var playerAnimator = collision.GetComponent<Animator>();
             var playerBody = collision.GetComponent<Rigidbody2D>();
-            Debug.Log("Player entered mushroom area...isJumping: " + playerAnimator.GetBool("isJumping").ToString() + "  -- isPowerPunching: " + playerAnimator.GetBool("isPowerPunching").ToString() + "  -- velocity.y" + playerBody.velocity.y);
+            //Debug.Log("Player entered mushroom area...isJumping: " + playerAnimator.GetBool("isJumping").ToString() + "  -- isPowerPunching: " + playerAnimator.GetBool("isPowerPunching").ToString() + "  -- velocity.y" + playerBody.velocity.y);
             if (playerAnimator.GetBool("isJumping") && playerAnimator.GetBool("isPowerPunching"))
             {
                 animator.SetBool("isCatched", true);
+                OnPowerJump.Invoke();
             }
         }
     }
@@ -42,20 +43,26 @@ public class CogumeloPowerJump : MonoBehaviour
         {
             var playerAnimator = collision.GetComponent<Animator>();
             var playerBody = collision.GetComponent<Rigidbody2D>();
-            Debug.Log("Player exited mushroom area...isJumping: " + playerAnimator.GetBool("isJumping").ToString() + "  -- isPowerPunching: " + playerAnimator.GetBool("isPowerPunching").ToString() + "  -- velocity.y" + playerBody.velocity.y);
-            //animator.SetBool("isCatched", false);
+            //Debug.Log("Player exited mushroom area...isJumping: " + playerAnimator.GetBool("isJumping").ToString() + "  -- isPowerPunching: " + playerAnimator.GetBool("isPowerPunching").ToString() + "  -- velocity.y" + playerBody.velocity.y);
         }
     }
 
     public void powerJump()
     {
-        OnPowerJump.Invoke();
+    }
+
+    public void animationJustStarted()
+    {
+    }
+
+    public void restartMushroom()
+    {
+        animator.SetBool("isCatched", false);
     }
 
     public void destroyMushroom()
     {
-        animator.SetBool("isCatched", false);
-        //Destroy(gameObject);
+        Destroy(gameObject);
     }
 
 }
