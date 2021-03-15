@@ -13,4 +13,10 @@ public class ExtendedBehavior : MonoBehaviour
         yield return new WaitForSeconds(time);
         callback();
     }
+
+    public Vector2 GetDirectionVector2D(float angle)
+    {
+        return new Vector2(Mathf.Cos(angle * Mathf.Deg2Rad), Mathf.Sin(angle * Mathf.Deg2Rad)).normalized;
+    }
+
 }
