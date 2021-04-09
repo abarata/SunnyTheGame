@@ -1332,7 +1332,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 3
+  m_GravityScale: 10
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
@@ -1350,8 +1350,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d08f91df3bd212f429df17f53ce2f364, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_JumpForce: 1000
-  m_PowerJumpForce: 1500
+  m_JumpForce: 2000
+  m_PowerJumpForce: 3000
   m_PunchDownForce: 800
   m_CrouchSpeed: 0.4
   m_MovementSmoothing: 0.05
@@ -1408,6 +1408,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  OnMidAirEvent:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!58 &820667355
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -1464,7 +1467,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   controller: {fileID: 820667354}
   animator: {fileID: 820667358}
-  runSpeed: 40
+  runSpeed: 70
 --- !u!95 &820667358
 Animator:
   serializedVersion: 3
