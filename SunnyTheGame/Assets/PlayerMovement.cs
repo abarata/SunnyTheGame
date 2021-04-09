@@ -18,7 +18,7 @@ public class PlayerMovement : MonoBehaviour {
 	bool jumpEnded = true;
 	bool jumpMidAir = false;
 	bool isGoingUp = false;
-
+	
 	private Rigidbody2D rb2D;
 
 	void Start() => rb2D = GetComponent<Rigidbody2D>();
@@ -33,9 +33,8 @@ public class PlayerMovement : MonoBehaviour {
 
 		if (Input.GetButtonDown("Jump"))
 		{
-			jump = true;
 			jumpEnded = false;
-			animator.SetBool("isJumping", true);
+			animator.SetBool("isJumpStart", true);
 			animator.SetBool("isJumpMidAir", false);
 			animator.SetBool("isJumpEnd", false);
 			isGoingUp = true;
@@ -73,21 +72,28 @@ public class PlayerMovement : MonoBehaviour {
 			isGoingUp = true;			
 		}
 
-		if (!jumpMidAir && vs != 0 && vs <= 1.7 && vs >= -1.7)
+		var auxIsJumping = animator.GetBool("isJumping");
+		if (auxIsJumping && vs!=0 && vs <= 1.7 && vs >= -1.7)
         {
-			jumpMidAir = true;
-			animator.SetBool("isJumpMidAir", true);
+			onMidAir();
 		}
 
 		if (vs != 0) Debug.Log("GetVerticalSpeed: " + vs.ToString());
 	}
 
+	public void onStartJumping()
+    {
+		jump = true;
+		animator.SetBool("isJumping", true);
+		animator.SetBool("isJumpStart", false);
+	}
 	public void onLanding()
     {
 		//Debug.Log("PlayerMovement - landing isJumping: " + animator.GetBool("isJumping").ToString() + "  --- landing isPowerPunching: " + animator.GetBool("isPowerPunching").ToString() + "  -- powerjump: " + powerjump.ToString());
 		if (!powerjump) animator.SetBool("isJumping", false);
 		animator.SetBool("isPowerPunching", false);
-    }
+		onMidAirEnded();
+	}
 
 	public void onLanded()
     {
@@ -123,6 +129,7 @@ public class PlayerMovement : MonoBehaviour {
 		animator.SetBool("isJumpEnd", false);
 		animator.SetBool("isJumpMidAir", false);
 		animator.SetBool("isJumping", true);
+		animator.SetBool("isJumpStart", false);
 		powerdownpunch = false;
 		powerjump = true;
 		jump = true;
