@@ -15,7 +15,16 @@ public class PlayerMovement : MonoBehaviour {
 	bool powerjump = false;
 	bool crouch = false;
 	bool powerdownpunch = false;
-	
+	bool jumpEnded = true;
+	bool jumpMidAir = false;
+	bool isGoingUp = false;
+
+	private Rigidbody2D rb2D;
+
+	void Start() => rb2D = GetComponent<Rigidbody2D>();
+
+	private float GetVerticalSpeed() => rb2D.velocity.y;
+
 	// Update is called once per frame
 	void Update () {
 
@@ -25,7 +34,11 @@ public class PlayerMovement : MonoBehaviour {
 		if (Input.GetButtonDown("Jump"))
 		{
 			jump = true;
+			jumpEnded = false;
 			animator.SetBool("isJumping", true);
+			animator.SetBool("isJumpMidAir", false);
+			animator.SetBool("isJumpEnd", false);
+			isGoingUp = true;
 		}
 
 		if (Input.GetButtonDown("PowerDownPunch"))
@@ -54,6 +67,19 @@ public class PlayerMovement : MonoBehaviour {
 		controller.Move(horizontalMove * Time.fixedDeltaTime, crouch, jump, powerdownpunch, powerjump);
 		jump = false;
 		powerjump = false;
+		float vs = GetVerticalSpeed();
+		if (!isGoingUp && vs > 0)
+		{
+			isGoingUp = true;			
+		}
+
+		if (!jumpMidAir && vs != 0 && vs <= 1.7 && vs >= -1.7)
+        {
+			jumpMidAir = true;
+			animator.SetBool("isJumpMidAir", true);
+		}
+
+		if (vs != 0) Debug.Log("GetVerticalSpeed: " + vs.ToString());
 	}
 
 	public void onLanding()
@@ -62,6 +88,25 @@ public class PlayerMovement : MonoBehaviour {
 		if (!powerjump) animator.SetBool("isJumping", false);
 		animator.SetBool("isPowerPunching", false);
     }
+
+	public void onLanded()
+    {
+		jumpEnded = true;
+		isGoingUp = false;
+		animator.SetBool("isJumpEnd", true);
+    }
+
+	public void onMidAir()
+    {
+		jumpMidAir = true;
+		animator.SetBool("isJumpMidAir", true);
+	}
+	public void onMidAirEnded()
+    {
+		jumpMidAir = false;
+		isGoingUp = false;
+		animator.SetBool("isJumpMidAir", false);
+	}
 
 	public void onCrouching(bool isCrouching)
     {
@@ -75,9 +120,14 @@ public class PlayerMovement : MonoBehaviour {
 	public void onPowerJump ()
     {
 		//Debug.Log("PlayerMovement - Agora vai dar o SUPER SALTO!");
+		animator.SetBool("isJumpEnd", false);
+		animator.SetBool("isJumpMidAir", false);
 		animator.SetBool("isJumping", true);
 		powerdownpunch = false;
 		powerjump = true;
 		jump = true;
+		jumpEnded = false;
+		jumpMidAir = false;
+		isGoingUp = false;
 	}
 }

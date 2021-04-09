@@ -124,7 +124,7 @@ public class ExplosiveBee : ExtendedBehavior
         if (auxangle != l_angle)
         {
             auxangle = l_angle;
-            Debug.Log("l_angle: " + l_angle.ToString());
+            //Debug.Log("l_angle: " + l_angle.ToString());
         }
         var dir = GetDirectionVector2D(l_angle);
 
@@ -171,7 +171,7 @@ public class ExplosiveBee : ExtendedBehavior
         if (auxangle != l_angle)
         {
             auxangle = l_angle;
-            Debug.Log("l_angle: " + l_angle.ToString() + "  -- transform.position.x: " + transform.position.x.ToString() + "  -- StartFlyingWhenDistanceToPlayer: " + StartFlyingWhenDistanceToPlayer.ToString() + "  -- l_distancetoplayer: " + l_distancetoplayer.ToString());
+            //Debug.Log("l_angle: " + l_angle.ToString() + "  -- transform.position.x: " + transform.position.x.ToString() + "  -- StartFlyingWhenDistanceToPlayer: " + StartFlyingWhenDistanceToPlayer.ToString() + "  -- l_distancetoplayer: " + l_distancetoplayer.ToString());
         }
         //if ((l_angle < 0 && m_FacingRight) || (l_angle > 0 && !m_FacingRight)) l_angle *= -1;
 
@@ -222,8 +222,8 @@ public class ExplosiveBee : ExtendedBehavior
 
             if (obstacleInTheWay.obstacleInTheWay || getawayfromobstacle > 0)
             {
-                Debug.Log("getawayfromobstacle: " + getawayfromobstacle.ToString());
-                Debug.Log("obstacleInTheWay.obstacleHorizontalDistance: " + obstacleInTheWay.obstacleHorizontalDistance + "  -- horizontalMove: " + horizontalMove.ToString());
+                //Debug.Log("getawayfromobstacle: " + getawayfromobstacle.ToString());
+                //Debug.Log("obstacleInTheWay.obstacleHorizontalDistance: " + obstacleInTheWay.obstacleHorizontalDistance + "  -- horizontalMove: " + horizontalMove.ToString());
 
                 if (obstacleInTheWay.obstacleHorizontalDistance > 0 && horizontalMove > 0) horizontalMove = horizontalMove * -1f;
                 else if (obstacleInTheWay.obstacleHorizontalDistance < 0 && horizontalMove < 0) horizontalMove = horizontalMove * -1f;

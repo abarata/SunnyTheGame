@@ -44,6 +44,9 @@ public class CharacterController2D : ExtendedBehavior
 	public BoolEvent OnPowerPunchEvent;
 	private bool m_wasPowerPunching = false;
 
+	public BoolEvent OnMidAirEvent;
+	private bool m_wasOnMidAir = false;
+
     private string gameobjectname = "";
 
 	private void Awake()
@@ -55,6 +58,9 @@ public class CharacterController2D : ExtendedBehavior
 
 		if (OnCrouchEvent == null)
 			OnCrouchEvent = new BoolEvent();
+
+		if (OnMidAirEvent == null)
+			OnMidAirEvent = new BoolEvent();
 
 	}
     private void Start()
@@ -141,8 +147,18 @@ public class CharacterController2D : ExtendedBehavior
                 {
 					m_wasPowerPunching = false;
 					OnPowerPunchEvent.Invoke(false);
-				}
+				}else
+                {
+
+
+
+
+                }
+
             }
+
+
+
 		}else
         {
 			// set the Air cotrol to its initial state
