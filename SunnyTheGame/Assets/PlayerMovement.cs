@@ -128,11 +128,11 @@ public class PlayerMovement : MonoBehaviour {
 		//Debug.Log("PlayerMovement - Agora vai dar o SUPER SALTO!");
 		animator.SetBool("isJumpEnd", false);
 		animator.SetBool("isJumpMidAir", false);
-		animator.SetBool("isJumping", true);
-		animator.SetBool("isJumpStart", false);
+		animator.SetBool("isJumping", false);
+		animator.SetBool("isJumpStart", true);
 		powerdownpunch = false;
 		powerjump = true;
-		jump = true;
+		jump = false;
 		jumpEnded = false;
 		jumpMidAir = false;
 		isGoingUp = false;
