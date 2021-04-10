@@ -87,7 +87,7 @@ public class CharacterController2D : ExtendedBehavior
 				m_Grounded = true;
 				if (!wasGrounded)
 				{
-					//Debug.Log("CharacterController2D - colliding  -- wasGrounded: " + wasGrounded.ToString() + "  -- m_Rigidbody2D.velocity.y: " + m_Rigidbody2D.velocity.y.ToString() + "  -- gameobject.name: " + colliders[i].gameObject.name + "  -- gameobject.tag: " + colliders[i].gameObject.tag);
+					Debug.Log("CharacterController2D - colliding  -- wasGrounded: " + wasGrounded.ToString() + "  -- m_Rigidbody2D.velocity.y: " + m_Rigidbody2D.velocity.y.ToString() + "  -- gameobject.name: " + colliders[i].gameObject.name + "  -- gameobject.tag: " + colliders[i].gameObject.tag);
 
 					OnLandEvent.Invoke();
 

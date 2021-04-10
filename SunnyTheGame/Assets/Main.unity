@@ -317,9 +317,44 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5030786928097158284, guid: 6e1c12839dbe66144aa8522492350b6c,
         type: 3}
+      propertyPath: OnJump.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5030786928097158284, guid: 6e1c12839dbe66144aa8522492350b6c,
+        type: 3}
+      propertyPath: OnJump.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5030786928097158284, guid: 6e1c12839dbe66144aa8522492350b6c,
+        type: 3}
+      propertyPath: OnJump.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 820667357}
+    - target: {fileID: 5030786928097158284, guid: 6e1c12839dbe66144aa8522492350b6c,
+        type: 3}
+      propertyPath: OnJump.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5030786928097158284, guid: 6e1c12839dbe66144aa8522492350b6c,
+        type: 3}
+      propertyPath: OnJump.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: onJumpAgain
+      objectReference: {fileID: 0}
+    - target: {fileID: 5030786928097158284, guid: 6e1c12839dbe66144aa8522492350b6c,
+        type: 3}
       propertyPath: OnPowerJump.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 820667357}
+    - target: {fileID: 5030786928097158284, guid: 6e1c12839dbe66144aa8522492350b6c,
+        type: 3}
+      propertyPath: OnJump.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: PlayerMovement, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 5030786928097158284, guid: 6e1c12839dbe66144aa8522492350b6c,
+        type: 3}
+      propertyPath: OnJump.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 5030786928097158285, guid: 6e1c12839dbe66144aa8522492350b6c,
         type: 3}
       propertyPath: m_Size.x
@@ -447,6 +482,16 @@ PrefabInstance:
       value: 5.79
       objectReference: {fileID: 0}
     - target: {fileID: 6913269489211201821, guid: 6e1c12839dbe66144aa8522492350b6c,
+        type: 3}
+      propertyPath: m_SpriteTilingProperty.newSize.y
+      value: 1.73
+      objectReference: {fileID: 0}
+    - target: {fileID: 8000898194514463938, guid: 6e1c12839dbe66144aa8522492350b6c,
+        type: 3}
+      propertyPath: m_SpriteTilingProperty.newSize.x
+      value: 5.79
+      objectReference: {fileID: 0}
+    - target: {fileID: 8000898194514463938, guid: 6e1c12839dbe66144aa8522492350b6c,
         type: 3}
       propertyPath: m_SpriteTilingProperty.newSize.y
       value: 1.73
@@ -1786,7 +1831,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1007352554}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.95, y: -8.08, z: 0}
+  m_LocalPosition: {x: -0.9, y: -7.67, z: 0}
   m_LocalScale: {x: 0.5, y: 0.5, z: 1}
   m_Children: []
   m_Father: {fileID: 820667352}
@@ -6249,9 +6294,44 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5030786928097158284, guid: 6e1c12839dbe66144aa8522492350b6c,
         type: 3}
+      propertyPath: OnJump.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5030786928097158284, guid: 6e1c12839dbe66144aa8522492350b6c,
+        type: 3}
+      propertyPath: OnJump.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5030786928097158284, guid: 6e1c12839dbe66144aa8522492350b6c,
+        type: 3}
+      propertyPath: OnJump.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 820667357}
+    - target: {fileID: 5030786928097158284, guid: 6e1c12839dbe66144aa8522492350b6c,
+        type: 3}
+      propertyPath: OnJump.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5030786928097158284, guid: 6e1c12839dbe66144aa8522492350b6c,
+        type: 3}
+      propertyPath: OnJump.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: onJumpAgain
+      objectReference: {fileID: 0}
+    - target: {fileID: 5030786928097158284, guid: 6e1c12839dbe66144aa8522492350b6c,
+        type: 3}
       propertyPath: OnPowerJump.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 820667357}
+    - target: {fileID: 5030786928097158284, guid: 6e1c12839dbe66144aa8522492350b6c,
+        type: 3}
+      propertyPath: OnJump.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: PlayerMovement, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 5030786928097158284, guid: 6e1c12839dbe66144aa8522492350b6c,
+        type: 3}
+      propertyPath: OnJump.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 5030786928097158285, guid: 6e1c12839dbe66144aa8522492350b6c,
         type: 3}
       propertyPath: m_Size.x
@@ -6389,6 +6469,16 @@ PrefabInstance:
       value: 5.79
       objectReference: {fileID: 0}
     - target: {fileID: 6913269489211201821, guid: 6e1c12839dbe66144aa8522492350b6c,
+        type: 3}
+      propertyPath: m_SpriteTilingProperty.newSize.y
+      value: 1.73
+      objectReference: {fileID: 0}
+    - target: {fileID: 8000898194514463938, guid: 6e1c12839dbe66144aa8522492350b6c,
+        type: 3}
+      propertyPath: m_SpriteTilingProperty.newSize.x
+      value: 5.79
+      objectReference: {fileID: 0}
+    - target: {fileID: 8000898194514463938, guid: 6e1c12839dbe66144aa8522492350b6c,
         type: 3}
       propertyPath: m_SpriteTilingProperty.newSize.y
       value: 1.73

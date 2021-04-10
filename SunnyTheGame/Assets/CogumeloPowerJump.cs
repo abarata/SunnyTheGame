@@ -11,6 +11,7 @@ public class CogumeloPowerJump : MonoBehaviour
     [Space]
 
     public UnityEvent OnPowerJump;
+    public UnityEvent OnJump;
 
     // Start is called before the first frame update
     private void Start()
@@ -21,6 +22,8 @@ public class CogumeloPowerJump : MonoBehaviour
     {
         if (OnPowerJump == null)
             OnPowerJump = new UnityEvent();
+        if (OnJump == null)
+            OnJump = new UnityEvent();
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -29,11 +32,17 @@ public class CogumeloPowerJump : MonoBehaviour
         {
             var playerAnimator = collision.GetComponent<Animator>();
             var playerBody = collision.GetComponent<Rigidbody2D>();
-            //Debug.Log("Player entered mushroom area...isJumping: " + playerAnimator.GetBool("isJumping").ToString() + "  -- isPowerPunching: " + playerAnimator.GetBool("isPowerPunching").ToString() + "  -- velocity.y" + playerBody.velocity.y);
-            if (playerAnimator.GetBool("isJumping") && playerAnimator.GetBool("isPowerPunching"))
+            Debug.Log("Player entered mushroom area...isJumping: " + playerAnimator.GetBool("isJumping").ToString() + "  -- isJumpEnd: " + playerAnimator.GetBool("isJumpEnd").ToString() + "  -- isPowerPunching: " + playerAnimator.GetBool("isPowerPunching").ToString() + "  -- velocity.y" + playerBody.velocity.y);
+            if ((playerAnimator.GetBool("isJumping") || !playerAnimator.GetBool("isJumpEnd")) && playerAnimator.GetBool("isPowerPunching"))
             {
                 animator.SetBool("isCatched", true);
                 OnPowerJump.Invoke();
+            }
+            if ((playerAnimator.GetBool("isJumping") || !playerAnimator.GetBool("isJumpEnd")) && !playerAnimator.GetBool("isPowerPunching"))
+            {
+                animator.SetBool("isCatched", true);
+                Debug.Log("Invoke JumpAgain");
+                OnJump.Invoke();
             }
         }
     }
