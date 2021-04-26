@@ -19,6 +19,7 @@ public class PlayerMovement : MonoBehaviour {
 	bool jumpMidAir = false;
 	bool isGoingUp = false;
 	bool startjumpagain = false;
+	bool startpowerjump = false;
 	bool m_wasInMidAir = false;
 	bool restartvars = true;
 
@@ -78,21 +79,22 @@ public class PlayerMovement : MonoBehaviour {
 		controller.Move(horizontalMove * Time.fixedDeltaTime, crouch, jump, powerdownpunch, powerjump);
 		if (restartvars)
 		{
-			jump = false;
-			powerjump = false;
+			jump = false; 
 			startjumpagain = false;
+			powerjump = false;
+			restartvars = false;
 		}
 	}
 	public void onJumpAgain()
     {
-		restartvars = false;
-		startjumpagain = true;
-		onPrepareJump();
-		Debug.Log("Jump Again!");
+		if (!powerjump) startjumpagain = true;
+		//onPrepareJump();
+		Debug.Log("Jump Again? powerjump: " + powerjump);
 	}
 	public void onPrepareJump()
 	{
-		jump = false;
+		jump = false; 
+		startjumpagain = false;
 		jumpEnded = false;
 		animator.SetBool("isJumpStart", true);
 		animator.SetBool("isJumping", false);
@@ -104,9 +106,12 @@ public class PlayerMovement : MonoBehaviour {
 	public void onStartJumping()
 	{
 		jump = true;
+		powerjump = startpowerjump;
+		startpowerjump = false;
 		animator.SetBool("isJumpStart", false);
 		animator.SetBool("isJumping", true);
-		Debug.Log("Prep done! Start the jump!");
+		Debug.Log("Prep done! Start the jump! powerjump: " + powerjump);
+		restartvars = true;
 	}
 	public void onMidAir()
     {
@@ -133,18 +138,22 @@ public class PlayerMovement : MonoBehaviour {
 		animator.SetBool("isJumpStart", false);
 		animator.SetBool("isJumpMidAir", false);
 		Debug.Log("arrived at ground!");
+		if (startpowerjump) setLanded();
 	}
 
 	public void onLanded()
     {
+		setLanded();
+	}
+
+	public void setLanded() { 
 		jumpEnded = true;
 		isGoingUp = false;
 		animator.SetBool("isJumpEnd", true);
-		if (powerjump || startjumpagain) onPrepareJump();
+		if (startpowerjump || startjumpagain) onPrepareJump();
 		restartvars = true;
 		Debug.Log("Jump ended!");
 	}
-
 
 	public void onCrouching(bool isCrouching)
     {
@@ -158,16 +167,19 @@ public class PlayerMovement : MonoBehaviour {
 	public void onPowerJump ()
     {
 		restartvars = false;
+		startpowerjump = true;
 		Debug.Log("PlayerMovement - Agora vai dar o SUPER SALTO!");
-		animator.SetBool("isJumpEnd", false);
-		animator.SetBool("isJumpMidAir", false);
-		animator.SetBool("isJumping", false);
-		animator.SetBool("isJumpStart", true);
-		powerdownpunch = false;
-		powerjump = true;
-		jump = false;
-		jumpEnded = false;
-		jumpMidAir = false;
-		isGoingUp = false;
+		//animator.SetBool("isJumpEnd", false);
+		//animator.SetBool("isJumpMidAir", false);
+		//animator.SetBool("isJumping", false);
+		//animator.SetBool("isPowerPunching", false);
+		//animator.SetBool("isJumpStart", true);
+		//powerdownpunch = false;
+		//jump = false;
+		//jumpEnded = false;
+		//jumpMidAir = false;
+		//isGoingUp = false;
+		//startjumpagain = false;
+		//onPrepareJump();
 	}
 }
