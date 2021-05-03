@@ -48,7 +48,7 @@ public class PlayerMovement : ExtendedBehavior
 	// Update is called once per frame
 	void Update () {
 
-		setHorizontalMove(false);
+		setHorizontalMove();
 
 		if (Input.GetButtonDown("Jump"))
 		{
@@ -98,10 +98,10 @@ public class PlayerMovement : ExtendedBehavior
 		}
 	}
 
-	private void setHorizontalMove (bool forceStop)
+	private void setHorizontalMove ()
     {
 		horizontalMove = Input.GetAxisRaw("Horizontal") * runSpeed;
-		if (forceStop) horizontalMove = 0;
+		if (combopunch > 0) horizontalMove = 0;
 		animator.SetFloat("Speed", Math.Abs(horizontalMove));
 	}
 	public void SetPunchActive()
@@ -117,9 +117,9 @@ public class PlayerMovement : ExtendedBehavior
 	}
 
 	void startComboPunch() {
-		setHorizontalMove(true);
 		//combopunch1 = true;
 		combopunch = 1;
+		setHorizontalMove();
 		animator.SetBool("isComboPunch" + combopunch.ToString(), true);
 	}
 	public void endComboPunch() {
