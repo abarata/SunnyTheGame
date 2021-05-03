@@ -236,6 +236,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  OnJump:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!60 &8000898194514463938
 PolygonCollider2D:
   m_ObjectHideFlags: 0

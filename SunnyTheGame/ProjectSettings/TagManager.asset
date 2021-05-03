@@ -8,6 +8,8 @@ TagManager:
   - PRIZE
   - PowerJump
   - Through
+  - Punch
+  - Enemy
   layers:
   - Default
   - TransparentFX

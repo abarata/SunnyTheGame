@@ -23,6 +23,7 @@ public class ExplosiveBee : ExtendedBehavior
 
     public float flySpeed = 20f;
     [Range(0, .3f)] [SerializeField] private float m_MovementSmoothing = .05f;  // How much to smooth out the movement
+
     public float Damage = 3.0f;
 
     [SerializeField] private Transform m_ObstacleCheck;                           // A position marking where to check if the bee has obstacles in the way.
@@ -37,16 +38,18 @@ public class ExplosiveBee : ExtendedBehavior
     private bool isExploding = false;
     private Rigidbody2D m_Rigidbody2D;
     private CircleCollider2D m_DamageCollider;
+    private CircleCollider2D m_OwnDamageCollider;
     private Vector3 m_Velocity = Vector3.zero;
     private bool m_FacingRight = true;  // For determining which way the player is currently facing.
     private Vector2 InitialPosition;
     private float horizontalMove = 1f;
     private float verticalMove = 1f;
-    private float ymargin = 0.4f;
+    private float ymargin = 2.2f;
     private int getawayfromobstacle = 0;
     private float auxangle = 0f;
     private int numberOfTriesToByPassObstacules = 25;
-    
+    private GameObject m_playerpunchcheck;
+
     private bool isDead
     {
         get { return Health <= 0.0f; }
@@ -83,31 +86,35 @@ public class ExplosiveBee : ExtendedBehavior
         m_DamageCollider.radius = DamageRadius;
         StartFlyingWhenDistanceToPlayer = FlyDistance;
         InitialPosition = m_Rigidbody2D.position;
+
+        m_playerpunchcheck = GetChildWithName(PlayerController.gameObject, "PunchCheck");
+        m_OwnDamageCollider = m_playerpunchcheck.GetComponent<CircleCollider2D>();
     }
 
 
     private void detectObstaclesByOverlapping()
     {
-        //// The player is grounded if a circlecast to the groundcheck position hits anything designated as ground
-        //// This can be done using layers instead but Sample Assets will not overwrite your project settings.
-        //Collider2D collider = Physics2D.OverlapCircle(m_ObstacleCheck.position, k_ObstacleCheckRadius, PlayerController.m_WhatIsGround);
-        //Collider2D collider = Physics2D.
-        //if (collider && collider.gameObject != gameObject)
-        //{
-        //    //Debug.Log("Ground detected!");
-        //    float xtoobstacle = m_Rigidbody2D.transform.position.x - collider.transform.position.x;
-        //    float ytoobstacle = m_Rigidbody2D.transform.position.y - collider.transform.position.y;
+        Collider2D[] allOverlappingColliders = new Collider2D[16];
+        ContactFilter2D contactFilter = new ContactFilter2D();
 
-        //    obstacleInTheWay.obstacleInTheWay = true;
-        //    obstacleInTheWay.obstacleHorizontalDistance = xtoobstacle;
-        //    obstacleInTheWay.obstacleVerticalDistance = ytoobstacle;
-
-        //    Debug.DrawLine(m_Rigidbody2D.transform.position, collider.transform.position, Color.red);
-        //    if (!hadObstacleBefore)
-        //    {
-        //        Debug.Log("obstacleInTheWay: " + obstacleInTheWay.obstacleInTheWay + "  -- obstacleHorizontalDistance: " + obstacleInTheWay.obstacleHorizontalDistance.ToString() + "  -- obstacleVerticalDistance: " + obstacleInTheWay.obstacleVerticalDistance.ToString());
-        //    }
-        //}
+        int overlapCount = Physics2D.OverlapCollider(m_OwnDamageCollider, contactFilter.NoFilter(), allOverlappingColliders);
+        if (overlapCount > 0)
+        {
+            foreach (var colaux in allOverlappingColliders)
+            {
+                if (colaux != null && colaux.gameObject != gameObject)
+                {
+                    Debug.Log("collided with -> name: " + colaux.name + "    tag: " + colaux.tag);
+                    // how much the character should be knocked back
+                    var magnitude = 5000;
+                    // calculate force vector
+                    var force = colaux.transform.position - m_Rigidbody2D.transform.position;
+                    // normalize force vector to get direction only and trim magnitude
+                    force.Normalize();
+                    m_Rigidbody2D.AddForce(force * magnitude);
+                }
+            }
+        }
     }
     private void detectObstaclesByRaycast()
     {
@@ -177,7 +184,8 @@ public class ExplosiveBee : ExtendedBehavior
 
         Debug.DrawRay(m_Rigidbody2D.position, l_raydir, Color.black, 0, false);
 
-        if (playerIsInFlyRange && m_Rigidbody2D.velocity == Vector2.zero) {
+        if (playerIsInFlyRange && m_Rigidbody2D.velocity == Vector2.zero)
+        {
             obstacleInTheWay.obstacleInTheWay = true;
             obstacleInTheWay.obstacleHorizontalDistance = (m_Rigidbody2D.position.x <= PlayerController.PlayerPosition.x ? Math.Abs(xtoplayer) : Math.Abs(xtoplayer) * -1);
             obstacleInTheWay.obstacleVerticalDistance = (m_Rigidbody2D.transform.position.y > PlayerController.PlayerPosition.y ? Math.Abs(ytoplayer) : Math.Abs(ytoplayer) * -1);
@@ -206,6 +214,10 @@ public class ExplosiveBee : ExtendedBehavior
     private void Move()
     {
         Init();
+
+
+        detectObstaclesByOverlapping();
+
 
         checkIfplayerIsInRange();
 
@@ -282,7 +294,7 @@ public class ExplosiveBee : ExtendedBehavior
         {
             if (Math.Abs(xtoexplode) <= TriggerExplosionDistance && Math.Abs(ytoexplode) <= TriggerExplosionDistance)
             {
-                Debug.Log(" -- xtoexplode: " + xtoexplode.ToString() + "  -- ytoexplode: " + ytoexplode.ToString() + "  -- TriggerExplosionDistance: " + TriggerExplosionDistance.ToString());
+                //Debug.Log(" -- xtoexplode: " + xtoexplode.ToString() + "  -- ytoexplode: " + ytoexplode.ToString() + "  -- TriggerExplosionDistance: " + TriggerExplosionDistance.ToString());
                 Explode();
             }
         }
@@ -306,7 +318,7 @@ public class ExplosiveBee : ExtendedBehavior
     }
     private void Explode()
     {
-        Debug.Log("Start Exploding Bee!");
+        //Debug.Log("Start Exploding Bee!");
         isExploding = true;
         animator.SetBool("isDead", true);
     }
@@ -314,7 +326,7 @@ public class ExplosiveBee : ExtendedBehavior
     public void destroyExplosiveBee()
     {
         if (playerIsInDamageRange && !isDead) OnApplyDamage.Invoke((Damage * -1));
-        Debug.Log("destroyExplosiveBee and/or set damage");
+        //Debug.Log("destroyExplosiveBee and/or set damage");
         Destroy(gameObject);
     }
 

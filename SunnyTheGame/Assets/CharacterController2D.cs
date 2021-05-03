@@ -41,6 +41,9 @@ public class CharacterController2D : ExtendedBehavior
 	public BoolEvent OnCrouchEvent;
 	private bool m_wasCrouching = false;
 
+	public BoolEvent OnComboPunchEvent;
+	private bool m_wasComboPunching = false;
+
 	public BoolEvent OnPowerPunchEvent;
 	private bool m_wasPowerPunching = false;
 
@@ -55,6 +58,9 @@ public class CharacterController2D : ExtendedBehavior
 
 		if (OnLandEvent == null)
 			OnLandEvent = new UnityEvent();
+
+		if (OnComboPunchEvent == null)
+			OnComboPunchEvent = new BoolEvent();
 
 		if (OnCrouchEvent == null)
 			OnCrouchEvent = new BoolEvent();
@@ -87,7 +93,8 @@ public class CharacterController2D : ExtendedBehavior
 				m_Grounded = true;
 				if (!wasGrounded)
 				{
-					Debug.Log("CharacterController2D - colliding  -- wasGrounded: " + wasGrounded.ToString() + "  -- m_Rigidbody2D.velocity.y: " + m_Rigidbody2D.velocity.y.ToString() + "  -- gameobject.name: " + colliders[i].gameObject.name + "  -- gameobject.tag: " + colliders[i].gameObject.tag);
+					//
+					//Debug.Log("CharacterController2D - colliding  -- wasGrounded: " + wasGrounded.ToString() + "  -- m_Rigidbody2D.velocity.y: " + m_Rigidbody2D.velocity.y.ToString() + "  -- gameobject.name: " + colliders[i].gameObject.name + "  -- gameobject.tag: " + colliders[i].gameObject.tag);
 
 					OnLandEvent.Invoke();
 
@@ -99,7 +106,7 @@ public class CharacterController2D : ExtendedBehavior
 	}
 
 
-	public void Move(float move, bool crouch, bool jump, bool powerdownpunch, bool powerjump)
+	public void Move(float move, bool crouch, bool jump, bool powerdownpunch, bool powerjump, bool iscombopunching)
 	{
 		// If crouching, check to see if the character can stand up
 		if (!crouch)
@@ -147,13 +154,7 @@ public class CharacterController2D : ExtendedBehavior
                 {
 					m_wasPowerPunching = false;
 					OnPowerPunchEvent.Invoke(false);
-				}else
-                {
-
-
-
-
-                }
+				}
 
             }
 
@@ -217,6 +218,23 @@ public class CharacterController2D : ExtendedBehavior
 				Flip();
 			}
 		}
+
+		if (m_Grounded)
+		{ 
+			if (iscombopunching)
+			{
+				if (!m_wasComboPunching)
+				{
+					m_wasComboPunching = true;
+				}
+				Debug.Log("chamar o evento OnComboPunchEvent! ");
+				OnComboPunchEvent.Invoke(true);
+            }
+		}else
+        {
+			m_wasComboPunching = false;
+        }
+
 		// If the player should jump...
 		if ((m_Grounded && jump) || powerjump)
 		{
