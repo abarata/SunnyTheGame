@@ -6,7 +6,7 @@ AnimationClip:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Player_PunchCombo_1
+  m_Name: Player_PunchCombo_2
   serializedVersion: 6
   m_Legacy: 0
   m_Compressed: 0
@@ -20,21 +20,13 @@ AnimationClip:
   m_PPtrCurves:
   - curve:
     - time: 0
-      value: {fileID: 21300000, guid: 72280933224c57448b70f9387348c826, type: 3}
+      value: {fileID: 21300000, guid: 5b6157963df873645bf1afc33dfba6e4, type: 3}
     - time: 0.083333336
-      value: {fileID: 21300000, guid: de619e9de78e92a4fbdc60b06b5fc1fe, type: 3}
+      value: {fileID: 21300000, guid: 2b52f6d7059fd8e45b5231b9d6a2499e, type: 3}
     - time: 0.16666667
-      value: {fileID: 21300000, guid: 29761504038e4f94eafe7f416176e603, type: 3}
+      value: {fileID: 21300000, guid: 8067da76e11556547ad964903e7fa4f4, type: 3}
     - time: 0.25
-      value: {fileID: 21300000, guid: 1b53e131d3fd7c44ea3e02556e07b5d9, type: 3}
-    - time: 0.33333334
-      value: {fileID: 21300000, guid: bbf2e4d878c2b60478d4d8a972bd5ac2, type: 3}
-    - time: 0.41666666
-      value: {fileID: 21300000, guid: 3d4d3169c052dc345be400a6b7541b86, type: 3}
-    - time: 0.5
-      value: {fileID: 21300000, guid: ad21f71bcd94b6a4fafe990a8cdcef96, type: 3}
-    - time: 0.5833333
-      value: {fileID: 21300000, guid: 43b3b30cb7c639742b07aa446f46d861, type: 3}
+      value: {fileID: 21300000, guid: 3b1c2cb0cd4ada84dbc24f47d0aa3808, type: 3}
     attribute: m_Sprite
     path: 
     classID: 212
@@ -54,20 +46,16 @@ AnimationClip:
       customType: 23
       isPPtrCurve: 1
     pptrCurveMapping:
-    - {fileID: 21300000, guid: 72280933224c57448b70f9387348c826, type: 3}
-    - {fileID: 21300000, guid: de619e9de78e92a4fbdc60b06b5fc1fe, type: 3}
-    - {fileID: 21300000, guid: 29761504038e4f94eafe7f416176e603, type: 3}
-    - {fileID: 21300000, guid: 1b53e131d3fd7c44ea3e02556e07b5d9, type: 3}
-    - {fileID: 21300000, guid: bbf2e4d878c2b60478d4d8a972bd5ac2, type: 3}
-    - {fileID: 21300000, guid: 3d4d3169c052dc345be400a6b7541b86, type: 3}
-    - {fileID: 21300000, guid: ad21f71bcd94b6a4fafe990a8cdcef96, type: 3}
-    - {fileID: 21300000, guid: 43b3b30cb7c639742b07aa446f46d861, type: 3}
+    - {fileID: 21300000, guid: 5b6157963df873645bf1afc33dfba6e4, type: 3}
+    - {fileID: 21300000, guid: 2b52f6d7059fd8e45b5231b9d6a2499e, type: 3}
+    - {fileID: 21300000, guid: 8067da76e11556547ad964903e7fa4f4, type: 3}
+    - {fileID: 21300000, guid: 3b1c2cb0cd4ada84dbc24f47d0aa3808, type: 3}
   m_AnimationClipSettings:
     serializedVersion: 2
     m_AdditiveReferencePoseClip: {fileID: 0}
     m_AdditiveReferencePoseTime: 0
     m_StartTime: 0
-    m_StopTime: 0.6666667
+    m_StopTime: 0.33333334
     m_OrientationOffsetY: 0
     m_Level: 0
     m_CycleOffset: 0
@@ -87,14 +75,14 @@ AnimationClip:
   m_HasGenericRootTransform: 0
   m_HasMotionFloatCurves: 0
   m_Events:
-  - time: 0.41666666
+  - time: 0
     functionName: SetPunchActive
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
-  - time: 0.6666667
+  - time: 0.25
     functionName: endComboPunch
     data: 
     objectReferenceParameter: {fileID: 0}

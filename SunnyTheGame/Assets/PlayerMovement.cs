@@ -2,14 +2,21 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class PlayerMovement : ExtendedBehavior
 {
 
 	public CharacterController2D controller;
+	public PlayerScore scoreController;
 	public Animator animator;
 
 	public float runSpeed = 40f;
+
+	public RectTransform m_PanelGameOver;
+	public Text m_txtGameOver;
+	public Text m_txtHealth;
 
 	float horizontalMove = 0f;
 	bool jump = false;
@@ -25,10 +32,7 @@ public class PlayerMovement : ExtendedBehavior
 
 	bool iscombopunching = false;
 	int combopunch = 0;
-	bool combopunch1 = false;
-	bool combopunch2 = false;
-	bool combopunch3 = false;
-	bool combopunch4 = false;
+	bool isStillPunching = false;
 
 	bool restartvars = true;
 
@@ -41,9 +45,34 @@ public class PlayerMovement : ExtendedBehavior
 		rb2D = GetComponent<Rigidbody2D>();
 		m_playerpunchcheck = GetChildWithName(rb2D.gameObject, "PunchCheck");
 		m_playerpunchcheck.SetActive(false);
+
+        scoreController.GameOverEvent += ScoreController_GameOverEvent;
+        scoreController.HealthChangeEvent += ScoreController_HealthChangeEvent;
+
+		//Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Enemies"));
 	}
 
-	private float GetVerticalSpeed() => rb2D.velocity.y;
+    private void ScoreController_HealthChangeEvent(object sender, float e)
+    {
+		Debug.Log("update score (PlayerMovement): " + e.ToString());
+		m_txtHealth.text = "" + e.ToString();
+    }
+
+    private void ScoreController_GameOverEvent(object sender, EventArgs e)
+    {
+		//this.gameObject.SetActive(false);
+		rb2D.gameObject.SetActive(false);
+		m_PanelGameOver.gameObject.SetActive(true);
+    }
+
+    private float GetVerticalSpeed() => rb2D.velocity.y;
+
+
+	public void RestartGame ()
+    {
+		SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+		m_PanelGameOver.gameObject.SetActive(false);
+	}
 
 	// Update is called once per frame
 	void Update () {
@@ -101,6 +130,11 @@ public class PlayerMovement : ExtendedBehavior
 	private void setHorizontalMove ()
     {
 		horizontalMove = Input.GetAxisRaw("Horizontal") * runSpeed;
+		if (!isStillPunching || combopunch < 0 || combopunch > 4)
+		{
+			combopunch = 0;
+			isStillPunching = false;
+		}
 		if (combopunch > 0) horizontalMove = 0;
 		animator.SetFloat("Speed", Math.Abs(horizontalMove));
 	}
@@ -111,25 +145,43 @@ public class PlayerMovement : ExtendedBehavior
 
 	public void onPrepareComboPunch(bool punch)
     {
-		Debug.Log("onPrepareComboPunch: " + punch);
-		iscombopunching = false;
-		if (punch) startComboPunch();
+		Debug.Log("onPrepareComboPunch: isStillPunching: " + isStillPunching + "   -- punch: " + punch);
+		if (!isStillPunching && punch) startComboPunch();
 	}
 
 	void startComboPunch() {
-		//combopunch1 = true;
-		combopunch = 1;
+		iscombopunching = false;
+		isStillPunching = true;
+		if (combopunch < 0 || combopunch > 4) combopunch = 0;
+		++combopunch;
 		setHorizontalMove();
+		animator.SetBool("isComboPunching", isStillPunching);
 		animator.SetBool("isComboPunch" + combopunch.ToString(), true);
+        for (int i = 1; i <= 4; i++)
+        {
+			if (i != combopunch) animator.SetBool("isComboPunch" + i.ToString(), false);
+        }
 	}
 	public void endComboPunch() {
-		iscombopunching = false;
 		// disable the player punch check!
 		m_playerpunchcheck.SetActive(false);
-		
-		if (combopunch != 0) animator.SetBool("isComboPunch" + combopunch.ToString(), false);
+		int lastpunch = combopunch;
+        for (int i = 1; i <= 4; i++)
+        {
+			animator.SetBool("isComboPunch" + i.ToString(), false);
+        }
+		//Debug.Log("endComboPunch lastpunch: " + lastpunch.ToString());
 
-		combopunch = 0;
+		if (iscombopunching)
+        {
+			startComboPunch();
+		}
+		else { 
+			combopunch = 0;
+			isStillPunching = false;
+			animator.SetBool("isComboPunching", isStillPunching);
+		}
+
 	}
 	public void onJumpAgain()
     {

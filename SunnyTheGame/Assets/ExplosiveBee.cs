@@ -24,7 +24,7 @@ public class ExplosiveBee : ExtendedBehavior
     public float flySpeed = 20f;
     [Range(0, .3f)] [SerializeField] private float m_MovementSmoothing = .05f;  // How much to smooth out the movement
 
-    public float Damage = 3.0f;
+    public float Damage = 10f;
 
     [SerializeField] private Transform m_ObstacleCheck;                           // A position marking where to check if the bee has obstacles in the way.
     private HasObstacleInTheWay obstacleInTheWay;
@@ -36,6 +36,7 @@ public class ExplosiveBee : ExtendedBehavior
     private bool playerIsInFlyRange = false;
     private bool playerIsInDamageRange = false;
     private bool isExploding = false;
+    private Rigidbody2D m_PlayerRigidbody2D;
     private Rigidbody2D m_Rigidbody2D;
     private CircleCollider2D m_DamageCollider;
     private CircleCollider2D m_OwnDamageCollider;
@@ -44,7 +45,7 @@ public class ExplosiveBee : ExtendedBehavior
     private Vector2 InitialPosition;
     private float horizontalMove = 1f;
     private float verticalMove = 1f;
-    private float ymargin = 2.2f;
+    private float ymargin = 0.5f;
     private int getawayfromobstacle = 0;
     private float auxangle = 0f;
     private int numberOfTriesToByPassObstacules = 25;
@@ -87,6 +88,7 @@ public class ExplosiveBee : ExtendedBehavior
         StartFlyingWhenDistanceToPlayer = FlyDistance;
         InitialPosition = m_Rigidbody2D.position;
 
+        m_PlayerRigidbody2D = PlayerController.gameObject.GetComponent<Rigidbody2D>();
         m_playerpunchcheck = GetChildWithName(PlayerController.gameObject, "PunchCheck");
         m_OwnDamageCollider = m_playerpunchcheck.GetComponent<CircleCollider2D>();
     }
@@ -96,6 +98,9 @@ public class ExplosiveBee : ExtendedBehavior
     {
         Collider2D[] allOverlappingColliders = new Collider2D[16];
         ContactFilter2D contactFilter = new ContactFilter2D();
+        if (!m_OwnDamageCollider.gameObject.activeSelf) return;
+
+        //Debug.Log("a detectar murros...");
 
         int overlapCount = Physics2D.OverlapCollider(m_OwnDamageCollider, contactFilter.NoFilter(), allOverlappingColliders);
         if (overlapCount > 0)
@@ -270,7 +275,7 @@ public class ExplosiveBee : ExtendedBehavior
                 Flip();
             }
         }
-        else if (!isExploding)
+        else if (isExploding)
         {
             m_Rigidbody2D.constraints = RigidbodyConstraints2D.FreezeAll;
             getawayfromobstacle = 0;
@@ -306,6 +311,7 @@ public class ExplosiveBee : ExtendedBehavior
     {
         if (collision.CompareTag("Player"))
         {
+            Debug.Log("Bee OnTriggerEnter2D!");
             playerIsInDamageRange = true;
         }
     }
@@ -320,6 +326,9 @@ public class ExplosiveBee : ExtendedBehavior
     {
         //Debug.Log("Start Exploding Bee!");
         isExploding = true;
+        m_Rigidbody2D.constraints = RigidbodyConstraints2D.FreezeAll;
+        //m_PlayerRigidbody2D.constraints = RigidbodyConstraints2D.FreezeAll;
+        
         animator.SetBool("isDead", true);
     }
 
@@ -328,6 +337,7 @@ public class ExplosiveBee : ExtendedBehavior
         if (playerIsInDamageRange && !isDead) OnApplyDamage.Invoke((Damage * -1));
         //Debug.Log("destroyExplosiveBee and/or set damage");
         Destroy(gameObject);
+        //m_PlayerRigidbody2D.constraints = RigidbodyConstraints2D.None;
     }
 
 }
